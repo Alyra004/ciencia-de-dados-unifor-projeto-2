@@ -128,6 +128,15 @@ def exportar_dados_higienizados(df_dev, df_teste):
     caminho_dev = pasta_processed / 'desenvolvimento_higienizado.csv'
     caminho_teste = pasta_processed / 'teste_higienizado.csv'
     
+    # Reduzindo o peso da base na memória
+    for col in df_dev.columns:
+        if df_dev[col].dtype == 'int64':
+            df_dev[col] = pd.to_numeric(df_dev[col], downcast='integer')
+            df_teste[col] = pd.to_numeric(df_teste[col], downcast='integer')
+        elif df_dev[col].dtype == 'object':
+            df_dev[col] = df_dev[col].astype('category')
+            df_teste[col] = df_teste[col].astype('category')
+
     print("-> Exportando datasets higienizados em dados/processed/...")
     df_dev.to_csv(caminho_dev, index=False)
     df_teste.to_csv(caminho_teste, index=False)
