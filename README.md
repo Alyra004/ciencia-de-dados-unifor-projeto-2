@@ -22,7 +22,19 @@ O objetivo central deste trabalho é construir e avaliar um **modelo de regress�
 
 ## 📊 Features Utilizadas
 
-*Relação dos atributos socioeconômicos, demográficos e notas escolares selecionados a partir do dicionário de dados do ENEM para a modelagem.*
+O modelo utiliza estritamente atributos conhecidos **antes** da realização do exame, totalizando **37 variáveis preditoras ($X$)**:
+
+1. **Perfil Demográfico e Escolar (10):**
+   * `TP_FAIXA_ETARIA`, `TP_SEXO`, `TP_ESTADO_CIVIL`, `TP_COR_RACA`, `TP_NACIONALIDADE`, `TP_ST_CONCLUSAO`, `TP_ANO_CONCLUIU`, `TP_ESCOLA`, `TP_ENSINO`, `IN_TREINEIRO`.
+2. **Contexto Pré-Exame (2):**
+   * `TP_LINGUA` (opção de língua estrangeira: Inglês ou Espanhol).
+   * `SG_UF_PROVA` (UF selecionada para a aplicação da prova).
+3. **Questionário Socioeconômico (25):**
+   * `Q001` a `Q025` (escolaridade e ocupação dos pais, renda mensal e posse de bens/serviços no domicílio).
+
+> [!IMPORTANT]
+> **Prevenção de Data Leakage:**
+> Foram completamente excluídas da matriz de entrada $X$ todas as notas de outras áreas (`NU_NOTA_CN`, `CH`, `LC`), notas e competências da redação (`NU_NOTA_REDACAO`, `COMP1` a `COMP5`), códigos de presença (`TP_PRESENCA_*`), situação da redação (`TP_STATUS_REDACAO`), gabaritos e respostas (`TX_*`) e códigos de prova (`CO_PROVA_*`).
 
 ---
 
@@ -48,11 +60,36 @@ Instruções para configuração do ambiente de desenvolvimento Python:
 
 ## 🚀 Ordem de Execução
 
-1. Obtenção e extração dos dados brutos em `dados/raw/`.
-2. Execução dos scripts/notebooks de pré-processamento e amostragem (`notebooks/` ou `src/`).
-3. Geração das bases tratadas (`dados/processed/`) e divisões de treino/teste (`dados/splits/`).
-4. Análise exploratória e treinamento dos modelos.
-5. Exportação de métricas e gráficos para a pasta `resultados/`.
+1. **Obtenção dos Dados Brutos:**
+   * Baixar e posicionar o arquivo `MICRODADOS_ENEM_2023.csv` na pasta `dados/raw/` (ver instruções abaixo).
+
+2. **Triagem e Particionamento (Splits 80/20):**
+   ```bash
+   python src/preparacao_dados.py
+   ```
+   * Diagnostica a base de 3.933.955 registros.
+   * Filtra os 2.692.427 candidatos com nota em Matemática (`NU_NOTA_MT`).
+   * Gera as partições com `random_state=42` e salva os identificadores em `dados/splits/` (`desenvolvimento_ids.csv` e `teste_ids.csv`).
+
+3. **Higienização e Tratamento de Vazamento:**
+   ```bash
+   python src/higienizacao.py
+   ```
+   * Filtra estritamente as colunas de leakage.
+   * Aplica tratamento categórico sociodemográfico e preenchimento constante no questionário socioeconômico (imune a vazamento em validação cruzada).
+   * Salva as bases tratadas em `dados/processed/` (`desenvolvimento_higienizado.csv` e `teste_higienizado.csv`).
+
+4. **Modelagem e Avaliação:**
+   * Treinamento dos modelos de regressão, validação cruzada e avaliação final no conjunto de teste isolado.
+
+---
+
+## 📚 Documentação Técnica
+
+Relatórios e diagnósticos detalhados disponíveis na pasta [`docs/`](docs/):
+* [`docs/diagnostico_triagem.txt`](docs/diagnostico_triagem.txt): Diagnóstico numérico detalhado da base nacional e dos splits.
+* [`docs/relatorio_higienizacao_leakage.md`](docs/relatorio_higienizacao_leakage.md): Inventário completo de Data Leakage, regras de imputação e justificativas metodológicas.
+* [`docs/higienização_e_tratamento_de_vazamentos.txt`](docs/higieniza%C3%A7%C3%A3o_e_tratamento_de_vazamentos.txt): Sumário executivo para acompanhamento do projeto.
 
 ---
 
