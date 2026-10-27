@@ -1,0 +1,32 @@
+# Dados e arquivos pesados
+dados/raw/*
+!dados/raw/.gitkeep
+
+dados/processed/*
+!dados/processed/.gitkeep
+
+dados/splits/*
+!dados/splits/.gitkeep
+
+*.csv
+*.zip
+
+
+# Python e ambientes virtuais
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.venv/
+venv/
+env/
+ENV/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# IDEs e sistema operacional
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
