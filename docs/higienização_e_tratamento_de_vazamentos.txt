@@ -1,0 +1,24 @@
+=== DADOS PARA A APRESENTAÇÃO DE ACOMPANHAMENTO ===
+Projeto 2 - Aprendizado de Máquina com Dados do ENEM
+Alvo da Equipe: Matemática (NU_NOTA_MT)
+
+1. DIAGNÓSTICO DA BASE:
+- Base nacional completa (ENEM 2023): 3.933.955 registros.
+- Exclusões justificadas (candidatos sem nota de Matemática): 1.241.528 excluídos.
+- Total de participantes elegíveis para a modelagem: 2.692.427.
+
+2. PARTICIONAMENTO (Divisão 80/20 com random_state=42):
+- Conjunto de Desenvolvimento (80%): 2.153.941 registros.
+- Conjunto de Teste Reservado (20%): 538.486 registros (isolado na pasta dados/splits).
+
+3. PREVENÇÃO DE VAZAMENTO (DATA LEAKAGE):
+Foram excluídas das variáveis de entrada (X):
+- As notas das outras áreas (CN, CH, LC, Redação e suas competências).
+- Códigos de presença nas provas e status da redação (TP_PRESENCA_*, TP_STATUS_REDACAO).
+- Informações sobre o gabarito (TX_GABARITO_*).
+- A coluna de ano (NU_ANO), por ser uma constante nesta edição.
+
+4. TRATAMENTO DE AUSÊNCIAS (HIGIENIZAÇÃO):
+- Regra Geral: Não imputamos notas ausentes no alvo, elas foram removidas.
+- Variáveis de Perfil Escolar/Sociodemográfico (ex: Estado Civil, Cor/Raça, Escola): Os valores ausentes foram substituídos por categorias como '0' ou '1', distinguindo o que é "desconhecimento" do que é "não resposta", seguindo o dicionário do Inep.
+- Questionário Socioeconômico (Q001 a Q025): Para evitar vazamento de informação durante a futura validação cruzada, os valores em branco foram preenchidos com a categoria estática 'Nao_Informado', preservando o significado sociológico da ausência da resposta.
