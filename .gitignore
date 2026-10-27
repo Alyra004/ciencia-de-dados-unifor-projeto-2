@@ -11,6 +11,9 @@ dados/splits/*
 *.csv
 *.zip
 
+# Exceção para identificadores das partições (splits salvos no repositório)
+!dados/splits/*.csv
+
 
 # Python e ambientes virtuais
 __pycache__/
