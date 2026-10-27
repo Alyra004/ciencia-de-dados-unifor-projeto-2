@@ -1,0 +1,23 @@
+================================================================================
+RELATÓRIO DE DIAGNÓSTICO E TRIAGEM - MICRODADOS ENEM 2023
+================================================================================
+
+1. BASE NACIONAL
+----------------
+- Arquivo utilizado: dados\raw\DADOS\MICRODADOS_ENEM_2023.csv
+- Quantidade inicial de registros: 3,933,955
+
+2. TRIAGEM DO ALVO
+------------------
+- Variável alvo: NU_NOTA_MT
+- Registros excluídos por ausência de nota: 1,241,528 (31.56%)
+- Total de participantes selecionados para modelagem: 2,692,427 (68.44%)
+
+3. PARTICIONAMENTO DOS DADOS (SPLITS - RANDOM_STATE=42)
+-------------------------------------------------------
+- Partição de Desenvolvimento (80%): 2,153,941 registros (80.00%)
+  -> Identificadores salvos em: dados/splits/desenvolvimento_ids.csv
+- Partição de Teste (20% - Isolada): 538,486 registros (20.00%)
+  -> Identificadores salvos em: dados/splits/teste_ids.csv
+
+================================================================================
