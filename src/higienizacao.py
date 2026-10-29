@@ -2,9 +2,14 @@ from pathlib import Path
 import pandas as pd
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-caminho_base = BASE_DIR / 'dados' / 'raw' / 'MICRODADOS_ENEM_2023.csv'
-if not caminho_base.exists():
-    caminho_base = BASE_DIR / 'dados' / 'raw' / 'DADOS' / 'MICRODADOS_ENEM_2023.csv'
+_RAW = BASE_DIR / 'dados' / 'raw'
+# Aceita o CSV solto em dados/raw/ ou dentro da pasta do zip do Inep descompactado.
+caminho_base = next(
+    (c for c in [_RAW / 'MICRODADOS_ENEM_2023.csv',
+                 _RAW / 'DADOS' / 'MICRODADOS_ENEM_2023.csv',
+                 *_RAW.glob('*/DADOS/MICRODADOS_ENEM_2023.csv')] if c.exists()),
+    _RAW / 'MICRODADOS_ENEM_2023.csv',
+)
 
 pasta_splits = BASE_DIR / 'dados' / 'splits'
 pasta_processed = BASE_DIR / 'dados' / 'processed'

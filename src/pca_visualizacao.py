@@ -46,6 +46,7 @@ def ler_amostra(caminho, fracao):
 
 
 def montar_matriz(df, bloco):
+    """Devolve (matriz padronizada, nomes das colunas). Padroniza porque o PCA é sensível à escala."""
     df = criar_features(df)
     numericas = list(FEATURES_CRIADAS) + ['TP_FAIXA_ETARIA', 'IN_TREINEIRO']
     prep = [('num', Pipeline([('imp', SimpleImputer(strategy='median')),
@@ -53,18 +54,32 @@ def montar_matriz(df, bloco):
     if bloco == 'todas':
         prep.append(('cat', OneHotEncoder(handle_unknown='ignore', min_frequency=0.01,
                                           sparse_output=False), CATEGORICAS))
-    return ColumnTransformer(prep).fit_transform(df)
+    ct = ColumnTransformer(prep)
+    X = ct.fit_transform(df)
+    return X, list(ct.get_feature_names_out())
+
+
+def salvar_cargas(pca, nomes, sufixo, top=8):
+    """Tabela de cargas (peso de cada feature em PC1-3) e as que mais contribuem."""
+    PASTA_FIGURAS.mkdir(parents=True, exist_ok=True)
+    cargas = pd.DataFrame(pca.components_.T, index=nomes, columns=['PC1', 'PC2', 'PC3'])
+    cargas.round(4).to_csv(PASTA_FIGURAS / f'pca_cargas_{sufixo}.csv', encoding='utf-8')
+    for pc in cargas.columns:
+        mais = cargas[pc].abs().sort_values(ascending=False).head(top).index
+        print(f'  {pc}: ' + ', '.join(f'{n.split("__")[-1]} ({cargas.loc[n, pc]:+.2f})' for n in mais))
 
 
 def plotar(Z, nota, var, sufixo):
     PASTA_FIGURAS.mkdir(parents=True, exist_ok=True)
-    kw = dict(c=nota, cmap='viridis', s=4, alpha=0.35, linewidths=0)
+    # Cor limitada aos percentis 1-99: notas zero e extremas não achatam o gradiente.
+    vmin, vmax = np.nanpercentile(nota, [1, 99])
+    kw = dict(c=nota, cmap='viridis', s=4, alpha=0.35, linewidths=0, vmin=vmin, vmax=vmax)
 
     fig, ax = plt.subplots(figsize=(7, 5.5))
     sc = ax.scatter(Z[:, 0], Z[:, 1], **kw)
     ax.set(xlabel=f'PC1 ({var[0]:.1%})', ylabel=f'PC2 ({var[1]:.1%})',
            title=f'PCA 2D - desenvolvimento (n={len(Z):,})')
-    fig.colorbar(sc, label=ALVO)
+    fig.colorbar(sc, label=f'{ALVO} (cor: percentis 1-99)')
     fig.text(0.01, 0.01, 'Fonte: Inep, ENEM 2023', fontsize=7)
     fig.savefig(PASTA_FIGURAS / f'pca_2d_{sufixo}.png', dpi=150, bbox_inches='tight')
     plt.close(fig)
@@ -106,11 +121,13 @@ def main():
     df = ler_amostra(args.entrada, args.amostra)
     print(f'Amostra do desenvolvimento: {len(df):,} linhas (fração={args.amostra}, semente={SEMENTE})')
 
-    X = montar_matriz(df, args.bloco)
+    X, nomes = montar_matriz(df, args.bloco)
     pca = PCA(n_components=3, random_state=SEMENTE).fit(X)
     Z = pca.transform(X)
     var = pca.explained_variance_ratio_
     print(f'Variância explicada PC1-3: {np.round(var, 4)} (total {var.sum():.1%})')
+    print('Maiores cargas:')
+    salvar_cargas(pca, nomes, args.bloco)
 
     plotar(Z, df[ALVO].to_numpy(), var, args.bloco)
     n80 = plotar_variancia(X, args.bloco)
