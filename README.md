@@ -91,6 +91,17 @@ O PCA das 138 colunas padronizadas, com todos os 2.153.941 participantes do dese
 
 **Ainda não implementados:** regressão linear sem regularização; árvore, KNN, SVR, bagging, pasting, Random Forest, boosting e stacking; PCA dentro da validação cruzada em pelo menos dois regressores; balanceamento; busca de hiperparâmetros nos três melhores; análise de erros por faixa de nota e por grupo; curva de aprendizado; avaliação final no teste (`resultados/previsoes_teste.csv`); e hipóteses de aprofundamento (incluindo comparar a codificação one-hot com números discretos).
 
+**Divisão dos modelos a treinar** (todos nos conjuntos A, B e D, com a mesma tabela de metodologia e resultados do documento):
+
+| Integrante | Modelos |
+| :--- | :--- |
+| João Igor Vidal de Andrade | Random Forest, Gradient Boosting e Stacking |
+| Raquel Albuquerque Quirino | Regressão linear sem regularização e árvore de decisão |
+| Amanda Lira | KNN e SVR |
+| Sofya Oliveira | Bagging e pasting |
+
+Os três melhores regressores distintos (pelo RMSE médio, sem contar o baseline) seguem para a busca de hiperparâmetros, com pelo menos dez configurações cada.
+
 **Dúvidas que a equipe pretende investigar:** remover, manter ou imputar o "não sei"; efeito das notas zero no treino; se B e D devem ser a base dos próximos modelos; se derivadas e fusão ajudam com modelos de árvore; se UF, dependência e localização da escola e ano de conclusão melhoram o erro; se outro método de seleção ou um `k` maior ajuda; e se os códigos de escola e de município influenciam os resultados.
 
 ---
