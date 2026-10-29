@@ -1,0 +1,108 @@
+DECISÕES PRELIMINARES DE FEATURES — ENEM 2023
+================================================
+
+Alvo do projeto
+---------------
+NU_NOTA_MT (nota de Matemática e suas Tecnologias) é o alvo y da regressão.
+Ela deve permanecer separada das variáveis de entrada X: o modelo tenta
+prever a nota, não recebe a nota como preditora.
+
+Features escolhidas para a primeira configuração
+------------------------------------------------
+A decisão inicial da equipe é usar 33 variáveis de entrada:
+
+- Perfil e trajetória escolar (8): TP_FAIXA_ETARIA, TP_SEXO,
+  TP_ESTADO_CIVIL, TP_COR_RACA, TP_ST_CONCLUSAO, TP_ESCOLA, TP_ENSINO e
+  IN_TREINEIRO.
+- Questionário socioeconômico (25): Q001 a Q025.
+
+Essas variáveis foram escolhidas por descreverem características demográficas,
+trajetória escolar e condições socioeconômicas/domiciliares disponíveis antes
+da prova. Os códigos categóricos devem ser interpretados pelo dicionário do
+ENEM 2023. Não se deve presumir que todo código numérico represente uma escala
+contínua ou que a distância entre códigos seja uniforme. Em especial, ocupações,
+respostas categóricas e faixas de renda exigem codificação apropriada; ausências,
+“não informado” e respostas de desconhecimento também devem ser distinguidos.
+IN_TREINEIRO pode ser mantida como feature por representar uma condição do
+participante conhecida no contexto da inscrição. Na base ENEM 2023, porém, ela
+apresenta associação perfeita com TP_ST_CONCLUSAO (V de Cramér = 1,00): todos os
+registros com TP_ST_CONCLUSAO = 3 estão marcados como treineiro e os demais não.
+Por isso, a equipe deve verificar se usar ambas acrescenta algo; a redundância
+não é motivo para remover participantes treineiros.
+
+Ausências verificadas na base
+-----------------------------
+As proporções abaixo foram calculadas lendo a base completa (3.933.955 linhas)
+e, adicionalmente, apenas os 2.692.427 registros com NU_NOTA_MT observada, que
+formam a população elegível para a regressão supervisionada. Para esta decisão,
+“muitas ausências” descreve campos com mais da metade dos valores ausentes; não
+é, por si só, prova de que a variável não tenha valor preditivo.
+
+- CO_MUNICIPIO_ESC, NO_MUNICIPIO_ESC, CO_UF_ESC, SG_UF_ESC,
+  TP_DEPENDENCIA_ADM_ESC, TP_LOCALIZACAO_ESC e TP_SIT_FUNC_ESC: 2.975.449
+  ausentes (75,64%) na base completa; entre participantes com nota de Matemática,
+  1.968.042 ausentes (73,10%) em cada campo. Essa baixa cobertura reforça a
+  decisão de não incluí-los na primeira configuração, além da alta cardinalidade,
+  redundância entre código/nome ou sigla e do fato de a localização escolar não
+  equivaler necessariamente à residência. A ausência precisa ser interpretada;
+  não se deve presumir que seja aleatória nem imputá-la sem justificativa.
+- TP_ENSINO: 2.594.874 ausentes (65,96%) na base completa; 1.660.064 (61,66%)
+  entre participantes com nota observada. Apesar da equipe tê-la marcado para
+  inclusão, essa cobertura baixa exige tratamento explícito, inspeção do
+  significado das ausências e comparação do efeito de mantê-la. Não se deve
+  preencher automaticamente com uma categoria comum sem justificar.
+
+As demais features da lista fornecida não apresentaram valores ausentes reais
+segundo a leitura do CSV (0 ausentes nos campos avaliados, incluindo Q001–Q025).
+Exceção: NU_NOTA_MT, o alvo, estava ausente em 1.241.528 registros (31,56%) da
+base completa; esses participantes não entram no treinamento supervisionado, e a
+nota ausente não deve ser imputada nem convertida em zero. Isso não elimina a
+necessidade de distinguir códigos explícitos como “não informado” das ausências
+reais.
+
+Variáveis deixadas fora da seleção inicial
+------------------------------------------
+- TP_NACIONALIDADE: excluída por decisão de escopo, pois a equipe espera pouca
+  diferenciação adicional diante da concentração de participantes na categoria
+  brasileira. A hipótese pode ser revista se uma comparação mostrar contribuição.
+- TP_ANO_CONCLUIU: deixada fora inicialmente por sobreposição parcial com
+  TP_ST_CONCLUSAO e pela codificação especial: 0 significa “não informado” e 17
+  significa “antes de 2007”. A decisão não afirma que a variável seja inútil;
+  ela pode ser testada depois como hipótese, com tratamento categórico adequado.
+- CO_MUNICIPIO_ESC e NO_MUNICIPIO_ESC: além de muitas categorias, têm 75,64% de
+  ausências na base e 73,10% entre participantes com nota observada. Código e nome
+  são representações redundantes do município da escola, que não deve ser tratado
+  como endereço residencial do participante.
+- CO_UF_ESC e SG_UF_ESC: também têm 75,64% de ausências na base e 73,10% entre
+  participantes com nota observada. Duplicam a mesma informação territorial em
+  formatos distintos (código e sigla).
+- TP_DEPENDENCIA_ADM_ESC e TP_LOCALIZACAO_ESC: cada campo tem 75,64% de ausências
+  na base e 73,10% entre participantes com nota observada. Podem informar sobre o
+  contexto escolar, mas a baixa cobertura motivou deixá-los fora da primeira
+  configuração; são candidatos a experimento posterior com tratamento explícito
+  das ausências.
+- TP_SIT_FUNC_ESC: tem 75,64% de ausências na base e 73,10% entre participantes
+  com nota observada. Além da cobertura baixa, descreve uma situação da escola,
+  informação indireta sobre a preparação individual do participante.
+- CO_MUNICIPIO_PROVA e NO_MUNICIPIO_PROVA: identificam o local de aplicação,
+  que não equivale necessariamente à residência. O nome e o código também
+  representam essencialmente a mesma informação e têm muitas categorias.
+- CO_UF_PROVA e SG_UF_PROVA: referem-se à UF de aplicação, não necessariamente à
+  residência; código e sigla são redundantes entre si. Foram deixadas fora da
+  primeira configuração por decisão de escopo, embora localização possa ser
+  estudada em experimento próprio.
+
+Interpretação da tabela no notebook
+-----------------------------------
+A coluna “Faz sentido?” registra a escolha preliminar da equipe. “Não” significa
+“não incluir na primeira configuração de X”, e não uma afirmação universal de
+que a variável jamais possa ajudar. A tabela no final do notebook também mostra
+o exemplo, a quantidade de valores distintos do inventário informado, a
+descrição oficial da variável e a justificativa da decisão. NU_NOTA_MT aparece
+como “Valor Y” para deixar claro que é o alvo, não uma feature.
+
+As escolhas são hipóteses de modelagem, não conclusões sobre causalidade. Devem
+ser validadas na comparação de experimentos, usando as mesmas partições e
+métricas, sem consultar o conjunto de teste para selecionar features. A tabela
+documenta a seleção pretendida; ela não altera automaticamente a lista de
+features usada pelo pipeline.
