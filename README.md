@@ -103,6 +103,7 @@ Para reproduzir os experimentos deste projeto, siga os passos abaixo para baixar
    ```
    dados/raw/MICRODADOS_ENEM_2023.csv
    ```
+   Os scripts também aceitam o zip descompactado sem mover o arquivo (`dados/raw/<pasta_do_zip>/DADOS/MICRODADOS_ENEM_2023.csv`).
 
 > [!CAUTION]
 > **ATENÇÃO - ARQUIVO PESADO!**
