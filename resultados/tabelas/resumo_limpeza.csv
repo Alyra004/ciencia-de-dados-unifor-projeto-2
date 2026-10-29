@@ -1,0 +1,8 @@
+indicador,quantidade
+Registros na base bruta,3933955
+Registros sem NU_NOTA_MT (fora da regressão),1241528
+Registros com NU_NOTA_MT (elegíveis),2692427
+Treineiros na base bruta,620067
+Treineiros elegíveis mantidos (nota observada),516920
+Treineiros sem nota-alvo (não entram na regressão),103147
+NU_INSCRICAO ausente,0

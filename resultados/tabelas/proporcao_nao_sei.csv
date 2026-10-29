@@ -1,0 +1,9 @@
+pergunta,registros,proporcao_pct,nota_media_nao_sei,nota_media_demais,diferenca_pontos
+"Q001 = H (não sei, pai ou responsável)",201083,9.34,496.8,537.6,-40.8
+"Q002 = H (não sei, mãe ou responsável)",62572,2.91,483.3,535.3,-52.1
+Q001 ou Q002 = H (escolaridade),220341,10.23,496.7,538.1,-41.4
+Q001 e Q002 = H (os dois),43314,2.01,477.9,535.0,-57.1
+"Q003 = F (não sei, ocupação do pai)",257093,11.94,502.2,538.1,-35.9
+"Q004 = F (não sei, ocupação da mãe)",186453,8.66,515.9,535.5,-19.6
+Q003 ou Q004 = F (ocupação),370624,17.21,512.0,538.4,-26.4
+"Qualquer ""não sei"" em Q001 a Q004",471359,21.88,508.6,540.9,-32.3

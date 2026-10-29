@@ -1,7 +1,10 @@
 pandas
 numpy
+scipy
 scikit-learn
 matplotlib
 seaborn
 plotly
 nbformat
+ipykernel
+ipywidgets

@@ -1,0 +1,14 @@
+medida,valor
+Notas observadas,2692427.0
+Nota mínima,0.0
+Nota máxima,958.6
+Q1,431.2
+Mediana,523.6
+Q3,630.1
+IQR,198.90000000000003
+Limite inferior IQR,132.84999999999997
+Limite superior IQR,928.45
+Candidatos abaixo do limite IQR,16638.0
+"Desses, notas zero (válidas)",16638.0
+Candidatos acima do limite IQR,1904.0
+Candidatos fora da escala 0-1000,0.0

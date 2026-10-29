@@ -14,6 +14,10 @@ dados/splits/*
 # Exceção para identificadores das partições (splits salvos no repositório)
 !dados/splits/*.csv
 
+# Exceção para os resultados leves exigidos no repositório (experimentos, tabelas)
+!resultados/*.csv
+!resultados/tabelas/*.csv
+
 
 # Python e ambientes virtuais
 __pycache__/
