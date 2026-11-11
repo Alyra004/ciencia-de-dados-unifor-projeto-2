@@ -4,7 +4,7 @@ Projeto da disciplina de Ciência de Dados (Unifor, Unidade II – Aprendizado d
 
 > **Etapa atual: entrega final.** O conjunto de teste foi aberto **uma única vez**, no fim do notebook `04-avaliacao-final.ipynb`, com a solução já fixada pela validação cruzada do desenvolvimento. Nenhuma escolha de feature, técnica ou hiperparâmetro usou o teste.
 
-Documentos: documentação completa em [`docs/documentacao_completa.docx`](docs/documentacao_completa.docx) (24 seções e apêndices, as 87 figuras e as tabelas de todos os experimentos, a tabela dos 82 experimentos com métricas por dobra e as tabelas com os valores de Spearman de cada figura), artigo em [`docs/artigo.pdf`](docs/artigo.pdf) (compilado de [`docs/artigo.tex`](docs/artigo.tex), IEEEtran; para recompilar: `cd docs && tectonic artigo.tex` ou `pdflatex artigo.tex`, duas vezes), slides do pitch em [`docs/pitch.pdf`](docs/pitch.pdf) (25 slides, um gráfico por slide).
+Documentos: relatório detalhado dos modelos (documento oficial) em [`docs/relatorio_detalhado_modelos.docx`](docs/relatorio_detalhado_modelos.docx) (24 seções e apêndices, as 87 figuras e as tabelas de todos os experimentos, a tabela dos 82 experimentos com métricas por dobra e as tabelas com os valores de Spearman de cada figura), artigo em [`docs/artigo.pdf`](docs/artigo.pdf) (compilado de [`docs/artigo.tex`](docs/artigo.tex), IEEEtran; para recompilar: `cd docs && tectonic artigo.tex` ou `pdflatex artigo.tex`, duas vezes), slides do pitch em [`docs/pitch.pdf`](docs/pitch.pdf) (25 slides, um gráfico por slide).
 
 ---
 
@@ -127,7 +127,7 @@ Regra de leitura: só chamamos de melhora ou piora se a diferença do RMSE médi
 
 ### Outros resultados
 
-* **Dataset 5 (replicação independente, solução de outra IA, pasta `resultados/dataset5_replicacao_independente/`):** treino feito só com o enunciado e o CSV, no mesmo teste que o nosso. Melhor modelo: Ridge com one-hot de todas as categóricas, RMSE 107,53 no teste (nossa solução: 105,81); o Gradient Boosting leve dela fez 108,07. O script e as métricas dela ficam em `resultados/dataset5_replicacao_independente/`. Avaliado também por validação cruzada nas nossas dobras (notebook 06): Ridge 107,51, SVR linear 107,90, Gradient Boosting leve 107,99 e regressão linear 111,29 (instável); a nossa solução fez 105,86 (1,6 ponto melhor). Detalhes na seção 8.4 e no Apêndice G da documentação completa.
+* **Dataset 5 (replicação independente, solução de outra IA, pasta `resultados/dataset5_replicacao_independente/`):** treino feito só com o enunciado e o CSV, no mesmo teste que o nosso. Melhor modelo: Ridge com one-hot de todas as categóricas, RMSE 107,53 no teste (nossa solução: 105,81); o Gradient Boosting leve dela fez 108,07. O script e as métricas dela ficam em `resultados/dataset5_replicacao_independente/`. Avaliado também por validação cruzada nas nossas dobras (notebook 06): Ridge 107,51, SVR linear 107,90, Gradient Boosting leve 107,99 e regressão linear 111,29 (instável); a nossa solução fez 105,86 (1,6 ponto melhor). Detalhes na seção 8.4 e no Apêndice G do relatório detalhado.
 * **Dataset 6 (diagnóstico com vazamento, fora da solução):** com as notas de Natureza, Humanas, Linguagens e Redação, o Gradient Boosting vai de RMSE 107,05 (R² 0,339) para 74,43 (R² 0,680) na validação cruzada. Só Natureza (mesmo dia) já dá 82,83. Confirma que o limite de R² ≈ 0,35 vem da informação do perfil. No Spearman (só desenvolvimento), as quatro notas são as colunas mais associadas à nota de Matemática (Humanas 0,66, Linguagens 0,64, Natureza 0,64, Redação 0,53, contra 0,46 da renda). Tirar as notas zero do treino não muda nada com só o perfil, mas **piora muito** com as notas (RMSE de 74,4 para 82,8): 98,3% de quem zerou Matemática também zerou Natureza, então os zeros ficam identificáveis e deixam de ser ruído.
 
 * **Extensões finais** (notebook 06, só validação cruzada; o teste já tinha sido aberto, então nada muda a solução final): (1) one-hot em todas as categóricas reduz o RMSE dos modelos lineares de 108,87 para 107,89 (cerca de 1 ponto; só nas nominais, 0,24); (2) V de Cramér: só situação de conclusão × tipo de escola passa de 0,7 (0,707); (3) município com target encoding dentro do Pipeline: 106,03 → 105,73 (ganho de 0,3, em todas as dobras; não adotado); (4) sementes 0, 1 e 2: 105,862 a 105,871, variação de 0,009; (5) busca de hiperparâmetros nas 74 colunas finais: Gradient Boosting 105,859 (igual aos 105,864 atuais), Bagging 107,88 e Random Forest 107,92; (6) dataset 5 por validação cruzada (acima).
@@ -179,7 +179,7 @@ notebooks/    01 exploração e datasets, 02 modelos (inicial, otimizado, sem ze
 src/          particao.py (recria/confere a partição e as dobras), modelagem.py (classe FusaoSituacao do pipeline final), cv_utils.py (validação cruzada por dobra e registro em experimentos.csv), figuras_pitch.py e figuras_pitch_graficos.py (figuras do pitch)
 models/       modelos treinados (*.joblib, fora do git)
 resultados/   experimentos.csv, previsoes_teste.csv, tabelas/, figuras/, dataset5_replicacao_independente/ (script e métricas da solução independente)
-docs/         documentacao_completa.docx, artigo.pdf, artigo.tex, pitch.pdf, acompanhamento.pdf
+docs/         relatorio_detalhado_modelos.docx, artigo.pdf, artigo.tex, pitch.pdf, acompanhamento.pdf
 requirements.txt
 ```
 
