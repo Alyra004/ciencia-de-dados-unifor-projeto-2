@@ -179,7 +179,7 @@ notebooks/    01 exploração e datasets, 02 modelos (inicial, otimizado, sem ze
 src/          particao.py (recria/confere a partição e as dobras), modelagem.py (classe FusaoSituacao do pipeline final), cv_utils.py (validação cruzada por dobra e registro em experimentos.csv), figuras_pitch.py e figuras_pitch_graficos.py (figuras do pitch)
 models/       modelos treinados (*.joblib, fora do git)
 resultados/   experimentos.csv, previsoes_teste.csv, tabelas/, figuras/, dataset5_replicacao_independente/ (script e métricas da solução independente)
-docs/         documentacao_completa.docx, artigo.pdf, artigo.tex, pitch.pdf, relatorio_detalhado_modelos.pdf, documentacao_decisoes.docx
+docs/         documentacao_completa.docx, artigo.pdf, artigo.tex, pitch.pdf, relatorio_detalhado_modelos.pdf, acompanhamento.pdf
 requirements.txt
 ```
 
