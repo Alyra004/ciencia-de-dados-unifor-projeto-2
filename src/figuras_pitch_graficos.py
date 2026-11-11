@@ -11,14 +11,18 @@ import numpy as np
 import pandas as pd
 
 FIG, TAB = "resultados/figuras/", "resultados/tabelas/"
-AZUL, VERM, CINZA, LARANJA, VERDE = "#1f77b4", "#d62728", "#9a9a9a", "#ff7f0e", "#2ca02c"
+AZUL, VERM, CINZA, LARANJA, VERDE = "#3D5A80", "#C8553D", "#B8C0CC", "#E8743B", "#2A9D8F"
+TINTA = "#1B2A41"
 plt.rcParams.update({"font.size": 14, "axes.titlesize": 16, "axes.labelsize": 14, "xtick.labelsize": 13, "ytick.labelsize": 13,
-                     "legend.fontsize": 13, "axes.spines.top": False, "axes.spines.right": False})
+                     "legend.fontsize": 13, "axes.spines.top": False, "axes.spines.right": False, "text.color": "#1B2A41",
+                     "axes.labelcolor": "#1B2A41", "xtick.color": "#44546A", "ytick.color": "#44546A", "axes.edgecolor": "#8A96A8", "legend.frameon": False})
 BR = lambda x, d=0: f"{x:,.{d}f}".replace(",", "X").replace(".", ",").replace("X", ".")
 exp = pd.read_csv("resultados/experimentos.csv", index_col="id")
 
 
 def salvar(fig, nome, fonte="Fonte: Inep, ENEM 2023."):
+    for a in fig.axes:                       # o título vai no slide, não na figura
+        a.set_title("")
     fig.text(0.01, 0.005, fonte, fontsize=9, color="#555")
     fig.savefig(FIG + nome, dpi=150)
     plt.close(fig)
@@ -180,7 +184,7 @@ salvar(fig, "pitch_g_curva.png", "Fonte: Inep, ENEM 2023; validação cruzada no
 pt = pd.read_csv("resultados/previsoes_teste.csv")
 obs, prev = pt["nota_observada"].to_numpy(), pt["previsao_final"].to_numpy()
 fig, ax = plt.subplots(figsize=(9.02, 4.02))
-hb = ax.hexbin(obs, prev, gridsize=70, bins="log", mincnt=1, cmap="viridis", extent=(0, 1000, 0, 1000))
+hb = ax.hexbin(obs, prev, gridsize=70, bins="log", mincnt=1, cmap="YlGnBu", extent=(0, 1000, 0, 1000))
 ax.plot([0, 1000], [0, 1000], color=VERM, lw=2, label="previsão perfeita")
 ax.set_xlim(0, 1000)
 ax.set_ylim(0, 1000)
@@ -194,7 +198,7 @@ salvar(fig, "pitch_g_obs_prev.png", "Fonte: Inep, ENEM 2023; teste; dispersão a
 
 res = obs - prev
 fig, ax = plt.subplots(figsize=(9.02, 4.02))
-hb = ax.hexbin(prev, res, gridsize=70, bins="log", mincnt=1, cmap="viridis")
+hb = ax.hexbin(prev, res, gridsize=70, bins="log", mincnt=1, cmap="YlGnBu")
 ax.axhline(0, color=VERM, lw=2, label=f"resíduo médio ({BR(res.mean(), 1)})")
 ax.set_xlabel("nota prevista")
 ax.set_ylabel("resíduo (observada − prevista)")
@@ -240,4 +244,99 @@ ax.set_xlabel("RMSE (pontos)")
 ax.set_title("Erro por região, renda e tipo de escola (teste)")
 plt.tight_layout(rect=(0, 0.03, 1, 1))
 salvar(fig, "pitch_g_erros_grupos.png", "Fonte: Inep, ENEM 2023; teste (538.486 participantes); n = participantes do grupo.")
+
+# ---------------------------------------------------------------- combinações (21 conjuntos)
+COLS = ["Perfil", "Renda", "Pais", "Bens", "Situa-\nção", "Escola", "Não sei\n+ nac.", "Cria-\ndas", "UF"]
+B = dict(Perfil=1, Renda=1, Pais=1, Bens=1, Situação="F", Escola=0, NS=0, Criadas=0, UF=0)
+def conj(**kw):
+    d = dict(B); d.update(kw); return d
+F4 = dict(Escola=1, NS=1, Criadas=1, Situação="4", UF=1)
+linhas = [
+    ("dataset_1_fundido", "H_dataset_dataset_1_fundido_GB", conj()),
+    ("dataset_1_features", "H_dataset_dataset_1_features_GB", conj(Criadas=1)),
+    ("dataset_2_escola", "H_dataset_dataset_2_escola_GB", conj(Escola=1)),
+    ("dataset_2_features_escola", "H_dataset_dataset_2_features_escola_GB", conj(Escola=1, Criadas=1)),
+    ("dataset_3_sem_escola", "H_dataset_dataset_3_sem_escola_GB", conj(NS=1)),
+    ("dataset_3_sem_escola_features", "H_dataset_dataset_3_sem_escola_features_GB", conj(NS=1, Criadas=1)),
+    ("dataset_3_escola", "H_dataset_dataset_3_escola_GB", conj(Escola=1, NS=1)),
+    ("dataset_3_escola_features", "H_dataset_dataset_3_escola_features_GB", conj(Escola=1, NS=1, Criadas=1)),
+    ("fusão refeita só no treino", "S1a_fusao_no_treino", conj(Escola=1, NS=1, Criadas=1)),
+    ("situação em 4 colunas", "S1b_colunas_separadas", conj(Escola=1, NS=1, Criadas=1, Situação="4")),
+    ("+ UF (representação final)", "S2_com_uf", conj(**F4)),
+    ("sem as 3 criadas", "S3_sem_features_criadas", conj(**{**F4, "Criadas": 0})),
+    ("seleção k = 51", "S4_gb_k51", conj(**F4)),
+    ("seleção k = 37", "S4_gb_k37", conj(**F4)),
+    ("seleção k = 22", "S4_gb_k22", conj(**F4)),
+    ("sem renda", "S6_sem_renda", conj(**{**F4, "Renda": 0})),
+    ("sem escolaridade dos pais", "S6_sem_escolaridade", conj(**{**F4, "Pais": 0, "NS": 0.5})),
+    ("sem bens e domicílio", "S6_sem_bens", conj(**{**F4, "Bens": 0})),
+    ("sem escola", "S6_sem_escola", conj(**{**F4, "Escola": 0})),
+    ("sem UF", "S6_sem_localização", conj(**{**F4, "UF": 0})),
+    ("sem perfil e trajetória", "S6_sem_perfil", conj(**{**F4, "Perfil": 0, "Situação": 0, "NS": 0.5})),
+]
+chaves = ["Perfil", "Renda", "Pais", "Bens", "Situação", "Escola", "NS", "Criadas", "UF"]
+fig = plt.figure(figsize=(11.8, 4.65))
+axm = fig.add_axes([0.235, 0.115, 0.43, 0.76])
+axb = fig.add_axes([0.69, 0.115, 0.29, 0.76], sharey=axm)
+n = len(linhas)
+for i, (rot, idx, d) in enumerate(linhas):
+    y = i
+    if i in (8, 11):
+        axm.axhline(y - 0.5, color="#8A96A8", lw=0.8)
+        axb.axhline(y - 0.5, color="#8A96A8", lw=0.8)
+    for j, k in enumerate(chaves):
+        v = d[k]
+        if v in (1, "F", "4"):
+            axm.add_patch(plt.Rectangle((j - 0.4, y - 0.36), 0.8, 0.72, color=VERDE if k != "Situação" else AZUL))
+            if v in ("F", "4"):
+                axm.text(j, y, "fund." if v == "F" else "4", ha="center", va="center", fontsize=9, color="white", fontweight="bold")
+        elif v == 0.5:
+            axm.add_patch(plt.Rectangle((j - 0.4, y - 0.36), 0.8, 0.72, color=VERDE, alpha=0.35))
+        else:
+            axm.add_patch(plt.Rectangle((j - 0.4, y - 0.36), 0.8, 0.72, fill=False, ec="#C9D1DC", lw=1))
+    if idx.startswith("S4"):
+        axm.text(len(chaves) - 0.4 + 0.15, y, "", fontsize=9)
+    x = exp.loc[idx]
+    cor = LARANJA if idx == "S2_com_uf" else (AZUL if idx.startswith("H_") else "#7A8BA6")
+    axb.barh(y, x.RMSE_media - 105, left=105, color=cor, height=0.72)
+    axb.text(x.RMSE_media + 0.08, y, BR(x.RMSE_media, 2), va="center", fontsize=10)
+axm.set_xlim(-0.5, len(chaves) - 0.5)
+axm.set_ylim(n - 0.5, -0.5)
+axm.set_xticks(range(len(chaves)), COLS, fontsize=10.5)
+axm.xaxis.tick_top()
+axm.set_yticks(range(n), [l[0] for l in linhas], fontsize=10.5)
+axm.tick_params(length=0)
+for s_ in axm.spines.values():
+    s_.set_visible(False)
+axb.set_xlim(105, 111.6)
+axb.tick_params(axis="y", left=False, labelleft=False)
+axb.set_xticks([105, 107, 109, 111])
+axb.set_xlabel("RMSE médio (validação cruzada)", fontsize=11)
+fig.savefig(FIG + "pitch_g_combinacoes.png", dpi=150)
+plt.close(fig)
+print("pitch_g_combinacoes.png")
+
+# ---------------------------------------------------------------- cascata: o que reduziu o erro
+passos = [("Regressão linear", exp.loc["H_inicial_Regressão linear", "RMSE_media"]),
+          ("Gradient Boosting", exp.loc["H_inicial_Gradient Boosting", "RMSE_media"]),
+          ("mais colunas\n(dataset 3, 45)", exp.loc["H_dataset_dataset_3_escola_features_GB", "RMSE_media"]),
+          ("situação escolar\nem 4 colunas", exp.loc["S1b_colunas_separadas", "RMSE_media"]),
+          ("+ UF da prova", exp.loc["S2_com_uf", "RMSE_media"]),
+          ("hiperparâmetros\nda busca", exp.loc["F_final_cv", "RMSE_media"])]
+fig, ax = plt.subplots(figsize=(11.6, 4.7))
+for i, (rot, v) in enumerate(passos):
+    if i == 0:
+        ax.bar(i, v - 104, bottom=104, color=CINZA, width=0.62)
+        ax.text(i, v + 0.12, BR(v, 2), ha="center", fontsize=13, fontweight="bold")
+        continue
+    ant = passos[i - 1][1]
+    ax.bar(i, ant - v, bottom=v, color=VERDE if i < len(passos) - 1 else LARANJA, width=0.62)
+    ax.plot([i - 1 + 0.31, i - 0.31], [ant, ant], color="#8A96A8", lw=1, ls=":")
+    ax.text(i, ant + 0.12, f"−{BR(ant - v, 2)}", ha="center", fontsize=13, fontweight="bold", color=VERDE if i < len(passos) - 1 else LARANJA)
+    ax.text(i, v - 0.18, BR(v, 2), ha="center", va="top", fontsize=12)
+ax.set_xticks(range(len(passos)), [p[0] for p in passos], fontsize=12)
+ax.set_ylim(104.8, 111.8)
+ax.set_ylabel("RMSE médio (pontos)")
+plt.tight_layout(rect=(0, 0.03, 1, 1))
+salvar(fig, "pitch_g_cascata.png", "Fonte: Inep, ENEM 2023; validação cruzada no desenvolvimento (mesmas 3 dobras). Baseline pela média: 131,63.")
 print("ok")
