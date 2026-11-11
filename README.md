@@ -4,7 +4,7 @@ Projeto da disciplina de Ciência de Dados (Unifor, Unidade II – Aprendizado d
 
 > **Etapa atual: entrega final.** O conjunto de teste foi aberto **uma única vez**, no fim do notebook `04-avaliacao-final.ipynb`, com a solução já fixada pela validação cruzada do desenvolvimento. Nenhuma escolha de feature, técnica ou hiperparâmetro usou o teste.
 
-Documentos: documentação completa em [`docs/documentacao_completa.docx`](docs/documentacao_completa.docx) (24 seções e apêndices, as 87 figuras e as tabelas de todos os experimentos, a tabela dos 82 experimentos com métricas por dobra e as tabelas com os valores de Spearman de cada figura), artigo em [`docs/artigo.pdf`](docs/artigo.pdf) (e em LaTeX, [`docs/artigo.tex`](docs/artigo.tex)), slides do pitch em [`docs/pitch.pdf`](docs/pitch.pdf) (25 slides, um gráfico por slide) e relatório técnico dos modelos em [`docs/relatorio_detalhado_modelos.pdf`](docs/relatorio_detalhado_modelos.pdf).
+Documentos: documentação completa em [`docs/documentacao_completa.docx`](docs/documentacao_completa.docx) (24 seções e apêndices, as 87 figuras e as tabelas de todos os experimentos, a tabela dos 82 experimentos com métricas por dobra e as tabelas com os valores de Spearman de cada figura), artigo em [`docs/artigo.pdf`](docs/artigo.pdf) (compilado de [`docs/artigo.tex`](docs/artigo.tex), IEEEtran; para recompilar: `cd docs && tectonic artigo.tex` ou `pdflatex artigo.tex`, duas vezes), slides do pitch em [`docs/pitch.pdf`](docs/pitch.pdf) (25 slides, um gráfico por slide) e relatório técnico dos modelos em [`docs/relatorio_detalhado_modelos.pdf`](docs/relatorio_detalhado_modelos.pdf).
 
 ---
 
