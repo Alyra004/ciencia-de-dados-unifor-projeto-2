@@ -4,7 +4,7 @@ Projeto da disciplina de Ciência de Dados (Unifor, Unidade II – Aprendizado d
 
 > **Etapa atual: entrega final.** O conjunto de teste foi aberto **uma única vez**, no fim do notebook `04-avaliacao-final.ipynb`, com a solução já fixada pela validação cruzada do desenvolvimento. Nenhuma escolha de feature, técnica ou hiperparâmetro usou o teste.
 
-Documentos: documentação completa em [`docs/documentacao_completa.docx`](docs/documentacao_completa.docx) (22 seções e apêndices, 27 tabelas e as 86 figuras de todos os experimentos, mais a tabela dos 64 experimentos com métricas por dobra), artigo em [`docs/artigo.pdf`](docs/artigo.pdf), slides do pitch em [`docs/pitch.pdf`](docs/pitch.pdf) e relatório técnico dos modelos em [`docs/relatorio_detalhado_modelos.pdf`](docs/relatorio_detalhado_modelos.pdf).
+Documentos: documentação completa em [`docs/documentacao_completa.docx`](docs/documentacao_completa.docx) (24 seções e apêndices, as 87 figuras e as tabelas de todos os experimentos, a tabela dos 82 experimentos com métricas por dobra e as tabelas com os valores de Spearman de cada figura), artigo em [`docs/artigo.pdf`](docs/artigo.pdf), slides do pitch em [`docs/pitch.pdf`](docs/pitch.pdf) (25 slides, um gráfico por slide) e relatório técnico dos modelos em [`docs/relatorio_detalhado_modelos.pdf`](docs/relatorio_detalhado_modelos.pdf).
 
 ---
 
@@ -176,7 +176,7 @@ Rode os notebooks a partir da pasta `notebooks/`.
 ```
 dados/        raw/ (originais, fora do git), processed/ (datasets, fora do git), splits/ (ids das partições e dobras)
 notebooks/    01 exploração e datasets, 02 modelos (inicial, otimizado, sem zeros), 03 redução de dimensionalidade, 04 avaliação final, 05 dataset 6 (diagnóstico), 06 extensões finais, 07 métricas por dobra do histórico
-src/          particao.py (recria/confere a partição e as dobras), modelagem.py (classe FusaoSituacao do pipeline final), cv_utils.py (validação cruzada por dobra e registro em experimentos.csv), figuras_pitch.py (figuras do pitch)
+src/          particao.py (recria/confere a partição e as dobras), modelagem.py (classe FusaoSituacao do pipeline final), cv_utils.py (validação cruzada por dobra e registro em experimentos.csv), figuras_pitch.py e figuras_pitch_graficos.py (figuras do pitch)
 models/       modelos treinados (*.joblib, fora do git)
 resultados/   experimentos.csv, previsoes_teste.csv, tabelas/, figuras/, dataset5_replicacao_independente/ (script e métricas da solução independente)
 docs/         documentacao_completa.docx, artigo.pdf, pitch.pdf, relatorio_detalhado_modelos.pdf, documentacao_decisoes.docx
