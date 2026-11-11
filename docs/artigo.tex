@@ -139,7 +139,7 @@ dataset\_3\_escola & 42 & 110,38 & 107,06 & 108,60 \\
 \textbf{Associação com a nota e os 21 conjuntos.} O Spearman \cite{spearman} de cada coluna com a nota (Tabela III) mostra a renda (Q006, +0,46) e os computadores em casa (Q024, +0,41) como as colunas mais associadas, seguidas da ocupação e da escolaridade dos responsáveis (+0,33 a +0,35) e de bens do domicílio (carros e banheiros, +0,34); língua estrangeira ($-$0,29), cor/raça ($-$0,22) e pessoas por quarto ($-$0,22) têm sinal negativo. Nenhuma coluna isolada passa de |$\rho$| = 0,46, e entre as colunas mantidas o maior valor é 0,63 (Q002 $\times$ Q004), abaixo do limite de 0,7; a fusão da trajetória escolar foi a única necessária. A Tabela IV lista os 21 conjuntos de entrada com o Gradient Boosting inicial: o melhor entre os salvos é o de 45 colunas (107,05), a UF dá o maior ganho entre as variações ($-$0,70) e retirar o bloco de perfil e trajetória o maior prejuízo (+4,42).
 
 \begin{table*}[!t]
-\caption{Spearman de colunas com a nota de Matemática (as 10 maiores e as 6 menores entre as 45 do dataset 3)}
+\caption{Spearman de colunas com a nota de Matemática (as 8 maiores e as 4 menores entre as 45 do dataset 3)}
 \centering\footnotesize
 \begin{tabularx}{\textwidth}{l>{\raggedright\arraybackslash}Xc}
 \toprule
@@ -153,11 +153,7 @@ Q004 & ocupação da mãe ou responsável & +0,346 \\
 Q010 & carros & +0,339 \\
 Q008 & banheiros & +0,339 \\
 Q001 & escolaridade do pai ou responsável & +0,332 \\
-CELULAR\_POR\_MORADOR & criada: celulares por morador & +0,280 \\
-ESCOLA\_PRIVADA & escola privada (0/1) & +0,217 \\
 Q001\_NAO\_SEI & indicador: não sabe a escolaridade do pai & $-$0,091 \\
-ESCOLA\_PUBLICA & escola pública (0/1) & $-$0,150 \\
-TP\_SEXO & sexo & $-$0,165 \\
 PESSOAS\_POR\_QUARTO & criada: pessoas por quarto & $-$0,221 \\
 TP\_COR\_RACA & cor/raça & $-$0,222 \\
 TP\_LINGUA & língua estrangeira (inglês ou espanhol) & $-$0,287 \\
@@ -378,6 +374,32 @@ Dataset 5 por validação cruzada: Ridge & 107,51 $\pm$ 0,20 & 0,333 \\
 \bottomrule
 \end{tabularx}
 \\[2pt]{\scriptsize Fonte: Inep, ENEM 2023; 3 dobras do desenvolvimento; teste não utilizado.}
+\end{table*}
+
+
+\subsection{As perguntas de investigação e as respostas}
+Cada teste respondeu a uma pergunta. As oito primeiras vêm das perguntas de aprofundamento do enunciado; as duas últimas surgiram dos resultados (Tabela X). Ficaram de fora os dados externos, os modelos regionais e a transformação do alvo ou da perda.
+
+\begin{table*}[!t]
+\caption{Perguntas de investigação e respostas (RMSE médio, validação cruzada)}
+\centering\footnotesize
+\begin{tabularx}{\textwidth}{l>{\raggedright\arraybackslash}X}
+\toprule
+\textbf{Pergunta} & \textbf{Resposta} \\
+\midrule
+1. Quais blocos de informação contribuem mais? & Perfil e trajetória (+4,42), bens (+1,33) e renda (+0,87) são os que mais fazem falta. \\
+2. O tratamento das categorias faz diferença? & Situação escolar separada: $-$0,33; "não sei" com indicador: cerca de $-$0,2; one-hot em modelos lineares: $-$0,98. \\
+3. As interações ajudam? & Não: retirar as três features criadas muda o erro em +0,01. \\
+4. A localização acrescenta informação? & Sim, pouco: UF $-$0,70; município $-$0,30 (depois do teste, não adotado). \\
+5. Dados externos melhoram o contexto? & Não testado. \\
+6. Existem perfis semelhantes? & K-means como feature: 107,79 contra 107,77, sem diferença. \\
+7. Dá para reduzir os erros nas notas extremas? & Pesos por faixa: acima de 800, 185 para 155, mas +2,1 no erro geral; sem os zeros no treino, sem diferença. \\
+8. Uma solução mais simples mantém o desempenho? & Não: seleção piora em 1,0 a 4,6, PCA piora, e a regressão linear perde 3,0 (30 vezes mais rápida). \\
+9. Alguém sem contexto chegaria a algo melhor? & Não: 107,53 no teste e 107,51 por validação cruzada, contra 105,81 e 105,86. \\
+10. O limite vem da informação ou do modelo? & Da informação: treino e validação a 1,1 ponto; com as notas de outras áreas, o R$^2$ vai de 0,34 a 0,68. \\
+\bottomrule
+\end{tabularx}
+\\[2pt]{\scriptsize Fonte: Inep, ENEM 2023; ids dos experimentos e seções no relatório detalhado (documentação do repositório).}
 \end{table*}
 
 
