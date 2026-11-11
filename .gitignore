@@ -17,6 +17,7 @@ dados/splits/*
 # Exceção para os resultados leves exigidos no repositório (experimentos, tabelas)
 !resultados/*.csv
 !resultados/tabelas/*.csv
+!resultados/dataset5_outra_ia/*.csv
 
 
 # Python e ambientes virtuais

@@ -1,0 +1,31 @@
+{
+  "maior_R2": {
+    "modelo": "ridge",
+    "R2": 0.33337604999542236,
+    "MSE": 11562.9765625,
+    "RMSE": 107.53128178581338,
+    "MAE": 83.62910461425781
+  },
+  "menor_MSE": {
+    "modelo": "ridge",
+    "R2": 0.33337604999542236,
+    "MSE": 11562.9765625,
+    "RMSE": 107.53128178581338,
+    "MAE": 83.62910461425781
+  },
+  "menor_RMSE": {
+    "modelo": "ridge",
+    "R2": 0.33337604999542236,
+    "MSE": 11562.9765625,
+    "RMSE": 107.53128178581338,
+    "MAE": 83.62910461425781
+  },
+  "menor_MAE": {
+    "modelo": "svr_linear",
+    "R2": 0.3289199471473694,
+    "MSE": 11640.271484375,
+    "RMSE": 107.89008983393701,
+    "MAE": 83.29723358154297
+  },
+  "aviso": "Vencedores por métrica são descritivos do conjunto de teste; não usar o teste para seleção/ajuste."
+}

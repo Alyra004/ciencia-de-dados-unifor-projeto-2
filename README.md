@@ -127,6 +127,9 @@ Regra de leitura: só chamamos de melhora ou piora se a diferença do RMSE médi
 
 ### Outros resultados
 
+* **Dataset 5 (solução independente de outra IA, pasta `treino_projeto2/`):** treino feito só com o enunciado e o CSV, no mesmo teste que o nosso. Melhor modelo: Ridge com one-hot de todas as categóricas, RMSE 107,53 no teste (nossa solução: 105,81); o Gradient Boosting leve dela fez 108,07. Sem validação cruzada; o script e as métricas ficam em `resultados/dataset5_outra_ia/`. Pendente: reimplementar a preparação nos notebooks 02 para comparar por validação cruzada. Detalhes na seção 8.4 da documentação completa.
+* **Dataset 6 (diagnóstico com vazamento, fora da solução):** com as notas de Natureza, Humanas, Linguagens e Redação, o Gradient Boosting vai de RMSE 107,05 (R² 0,339) para 74,43 (R² 0,680) na validação cruzada. Só Natureza (mesmo dia) já dá 82,83. Confirma que o limite de R² ≈ 0,35 vem da informação do perfil. No Spearman (só desenvolvimento), as quatro notas são as colunas mais associadas à nota de Matemática (Humanas 0,66, Linguagens 0,64, Natureza 0,64, Redação 0,53, contra 0,46 da renda). Tirar as notas zero do treino não muda nada com só o perfil, mas **piora muito** com as notas (RMSE de 74,4 para 82,8): 98,3% de quem zerou Matemática também zerou Natureza, então os zeros ficam identificáveis e deixam de ser ruído.
+
 * **PCA** (notebook 03): para 80% da variância são necessários 18 de 30 componentes; em regressão linear e Gradient Boosting, o PCA **piorou** o RMSE em todos os números de componentes testados. t-SNE e K-means servem para visualizar; as distâncias aos grupos do K-means não ajudaram.
 * **Notas zero fora do treino** (notebook 02 sem zeros): sem diferença clara no RMSE geral.
 * **Balanceamento por faixas** (seção 5 do notebook 04): dar peso às faixas raras reduz o erro nas notas altas (faixa 800+: RMSE de 185 para 155 com α = 0,5), mas piora o erro geral e o das faixas do meio. Não adotado.
@@ -158,6 +161,8 @@ Rode os notebooks a partir da pasta `notebooks/`.
 7. **`03-reducao-dimensionalidade.ipynb`:** PCA exploratório e dentro do Pipeline, t-SNE e K-means.
 8. **`04-avaliacao-final.ipynb`:** fusão sem vazamento, UF, features criadas, seleção, balanceamento, blocos de informação, solução final, curva de aprendizado e **teste final**. Grava `resultados/experimentos.csv`, `resultados/previsoes_teste.csv`, `resultados/tabelas/` e `resultados/figuras/`.
 
+9. **`05-diagnostico-notas-outras-areas.ipynb` (opcional, fora da solução):** o **dataset 6**, com as notas de outras áreas, mede o tamanho do vazamento que o enunciado proíbe. Só validação cruzada; o teste não é aberto. Grava `resultados/tabelas/diagnostico_dataset6_*.csv` (CV, sem zeros e Spearman), figuras `diagnostico_dataset6*.png` e `dados/processed/dataset_6_notas_outras_areas.csv`.
+
 `src/modelagem.py` tem a classe `FusaoSituacao` para carregar os modelos salvos fora do notebook (instruções no próprio arquivo). Tempo total aproximado: o notebook 04 leva cerca de 1 hora; o 02 otimizado, mais de 2 horas.
 
 ---
@@ -169,7 +174,7 @@ dados/        raw/ (originais, fora do git), processed/ (datasets, fora do git),
 notebooks/    01 exploração e datasets, 02 modelos (inicial, otimizado, sem zeros), 03 redução de dimensionalidade, 04 avaliação final
 src/          particao.py (recria/confere a partição e as dobras), modelagem.py (classe FusaoSituacao do pipeline final)
 models/       modelos treinados (*.joblib, fora do git)
-resultados/   experimentos.csv, previsoes_teste.csv, tabelas/, figuras/
+resultados/   experimentos.csv, previsoes_teste.csv, tabelas/, figuras/, dataset5_outra_ia/ (script e métricas da solução independente)
 docs/         documentacao_completa.docx, artigo.pdf, pitch.pdf, relatorio_detalhado_modelos.pdf, documentacao_decisoes.docx
 requirements.txt
 ```
