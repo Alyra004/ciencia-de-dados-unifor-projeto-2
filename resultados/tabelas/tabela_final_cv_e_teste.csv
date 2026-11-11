@@ -1,0 +1,4 @@
+modelo,CV RMSE,CV MAE,CV R²,CV tempo/dobra (s),Teste RMSE,Teste MAE,Teste R²,Teste ajuste (s)
+Baseline (média),131.63 ± 0.16,107.58 ± 0.06,-0.000 ± 0.000,0,131.70,107.64,-0.000,0
+Regressão linear (sem regularização),108.87 ± 0.16,84.86 ± 0.04,0.316 ± 0.001,3,108.86,84.89,0.317,4
+Solução final (Gradient Boosting),105.86 ± 0.17,82.02 ± 0.05,0.353 ± 0.001,91,105.81,82.00,0.354,165

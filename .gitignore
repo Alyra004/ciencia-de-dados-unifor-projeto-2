@@ -37,3 +37,6 @@ ENV/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Modelos treinados (podem ter centenas de MB)
+models/*.joblib
