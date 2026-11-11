@@ -1,0 +1,7 @@
+id,RMSE_media,RMSE_desvio,MAE_media,R2_media,tempo_s
+E1_linear_A_numeros,108.868,0.162,84.862,0.316,1.299
+E1_linear_B_onehot_nominais,108.629,0.163,84.655,0.319,1.646
+E1_linear_C_onehot_todas,107.888,0.178,83.955,0.328,5.093
+E1_ridge_A_numeros,108.868,0.162,84.862,0.316,0.775
+E1_ridge_B_onehot_nominais,108.63,0.163,84.656,0.319,1.227
+E1_ridge_C_onehot_todas,107.891,0.179,83.958,0.328,5.696

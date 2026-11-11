@@ -1,0 +1,7 @@
+id,RMSE_media,RMSE_desvio,MAE_media,R2_media,tempo_s
+E6_dataset5_regressao_linear,111.287,2.393,84.203,0.285,38.531
+E6_dataset5_ridge,107.508,0.197,83.599,0.333,15.17
+E6_dataset5_svr_linear,107.903,0.206,83.298,0.328,17.585
+E6_dataset5_gradient_boosting,107.992,0.21,84.353,0.327,7.083
+F_regressao_linear_cv,108.868,0.162,84.862,0.316,2.803
+F_final_cv,105.864,0.169,82.025,0.353,91.207

@@ -4,7 +4,7 @@ Projeto da disciplina de Ciência de Dados (Unifor, Unidade II – Aprendizado d
 
 > **Etapa atual: entrega final.** O conjunto de teste foi aberto **uma única vez**, no fim do notebook `04-avaliacao-final.ipynb`, com a solução já fixada pela validação cruzada do desenvolvimento. Nenhuma escolha de feature, técnica ou hiperparâmetro usou o teste.
 
-Documentos: documentação completa em [`docs/documentacao_completa.docx`](docs/documentacao_completa.docx) (texto, tabelas e 38 figuras de todos os experimentos), artigo em [`docs/artigo.pdf`](docs/artigo.pdf), slides do pitch em [`docs/pitch.pdf`](docs/pitch.pdf) e relatório técnico dos modelos em [`docs/relatorio_detalhado_modelos.pdf`](docs/relatorio_detalhado_modelos.pdf).
+Documentos: documentação completa em [`docs/documentacao_completa.docx`](docs/documentacao_completa.docx) (22 seções e apêndices, 27 tabelas e as 86 figuras de todos os experimentos, mais a tabela dos 64 experimentos com métricas por dobra), artigo em [`docs/artigo.pdf`](docs/artigo.pdf), slides do pitch em [`docs/pitch.pdf`](docs/pitch.pdf) e relatório técnico dos modelos em [`docs/relatorio_detalhado_modelos.pdf`](docs/relatorio_detalhado_modelos.pdf).
 
 ---
 
@@ -127,9 +127,10 @@ Regra de leitura: só chamamos de melhora ou piora se a diferença do RMSE médi
 
 ### Outros resultados
 
-* **Dataset 5 (solução independente de outra IA, pasta `treino_projeto2/`):** treino feito só com o enunciado e o CSV, no mesmo teste que o nosso. Melhor modelo: Ridge com one-hot de todas as categóricas, RMSE 107,53 no teste (nossa solução: 105,81); o Gradient Boosting leve dela fez 108,07. Sem validação cruzada; o script e as métricas ficam em `resultados/dataset5_outra_ia/`. Pendente: reimplementar a preparação nos notebooks 02 para comparar por validação cruzada. Detalhes na seção 8.4 da documentação completa.
+* **Dataset 5 (replicação independente, solução de outra IA, pasta `resultados/dataset5_replicacao_independente/`):** treino feito só com o enunciado e o CSV, no mesmo teste que o nosso. Melhor modelo: Ridge com one-hot de todas as categóricas, RMSE 107,53 no teste (nossa solução: 105,81); o Gradient Boosting leve dela fez 108,07. O script e as métricas dela ficam em `resultados/dataset5_replicacao_independente/`. Avaliado também por validação cruzada nas nossas dobras (notebook 06): Ridge 107,51, SVR linear 107,90, Gradient Boosting leve 107,99 e regressão linear 111,29 (instável); a nossa solução fez 105,86 (1,6 ponto melhor). Detalhes na seção 8.4 e no Apêndice G da documentação completa.
 * **Dataset 6 (diagnóstico com vazamento, fora da solução):** com as notas de Natureza, Humanas, Linguagens e Redação, o Gradient Boosting vai de RMSE 107,05 (R² 0,339) para 74,43 (R² 0,680) na validação cruzada. Só Natureza (mesmo dia) já dá 82,83. Confirma que o limite de R² ≈ 0,35 vem da informação do perfil. No Spearman (só desenvolvimento), as quatro notas são as colunas mais associadas à nota de Matemática (Humanas 0,66, Linguagens 0,64, Natureza 0,64, Redação 0,53, contra 0,46 da renda). Tirar as notas zero do treino não muda nada com só o perfil, mas **piora muito** com as notas (RMSE de 74,4 para 82,8): 98,3% de quem zerou Matemática também zerou Natureza, então os zeros ficam identificáveis e deixam de ser ruído.
 
+* **Extensões finais** (notebook 06, só validação cruzada; o teste já tinha sido aberto, então nada muda a solução final): (1) one-hot em todas as categóricas reduz o RMSE dos modelos lineares de 108,87 para 107,89 (cerca de 1 ponto; só nas nominais, 0,24); (2) V de Cramér: só situação de conclusão × tipo de escola passa de 0,7 (0,707); (3) município com target encoding dentro do Pipeline: 106,03 → 105,73 (ganho de 0,3, em todas as dobras; não adotado); (4) sementes 0, 1 e 2: 105,862 a 105,871, variação de 0,009; (5) busca de hiperparâmetros nas 74 colunas finais: Gradient Boosting 105,859 (igual aos 105,864 atuais), Bagging 107,88 e Random Forest 107,92; (6) dataset 5 por validação cruzada (acima).
 * **PCA** (notebook 03): para 80% da variância são necessários 18 de 30 componentes; em regressão linear e Gradient Boosting, o PCA **piorou** o RMSE em todos os números de componentes testados. t-SNE e K-means servem para visualizar; as distâncias aos grupos do K-means não ajudaram.
 * **Notas zero fora do treino** (notebook 02 sem zeros): sem diferença clara no RMSE geral.
 * **Balanceamento por faixas** (seção 5 do notebook 04): dar peso às faixas raras reduz o erro nas notas altas (faixa 800+: RMSE de 185 para 155 com α = 0,5), mas piora o erro geral e o das faixas do meio. Não adotado.
@@ -163,6 +164,9 @@ Rode os notebooks a partir da pasta `notebooks/`.
 
 9. **`05-diagnostico-notas-outras-areas.ipynb` (opcional, fora da solução):** o **dataset 6**, com as notas de outras áreas, mede o tamanho do vazamento que o enunciado proíbe. Só validação cruzada; o teste não é aberto. Grava `resultados/tabelas/diagnostico_dataset6_*.csv` (CV, sem zeros e Spearman), figuras `diagnostico_dataset6*.png` e `dados/processed/dataset_6_notas_outras_areas.csv`.
 
+10. **`06-extensoes-finais.ipynb`:** one-hot nos modelos lineares, V de Cramér, município com target encoding, três sementes, busca de hiperparâmetros na representação final e o dataset 5 por validação cruzada. Só validação cruzada; grava as linhas `E1_*` a `E6_*` do `resultados/experimentos.csv`, `resultados/tabelas/e*_*.csv` e `resultados/figuras/e2_cramer_v.png` (cerca de 2 horas).
+11. **`07-metricas-por-dobra-historico.ipynb`:** refaz, com as mesmas configurações, os experimentos dos notebooks 02 e 03 (linhas `H_*`) gravando as métricas das 3 dobras no `experimentos.csv`, e imprime a diferença para a média antiga (cerca de 3 horas). As funções de apoio estão em `src/cv_utils.py`.
+
 `src/modelagem.py` tem a classe `FusaoSituacao` para carregar os modelos salvos fora do notebook (instruções no próprio arquivo). Tempo total aproximado: o notebook 04 leva cerca de 1 hora; o 02 otimizado, mais de 2 horas.
 
 ---
@@ -171,10 +175,10 @@ Rode os notebooks a partir da pasta `notebooks/`.
 
 ```
 dados/        raw/ (originais, fora do git), processed/ (datasets, fora do git), splits/ (ids das partições e dobras)
-notebooks/    01 exploração e datasets, 02 modelos (inicial, otimizado, sem zeros), 03 redução de dimensionalidade, 04 avaliação final
-src/          particao.py (recria/confere a partição e as dobras), modelagem.py (classe FusaoSituacao do pipeline final)
+notebooks/    01 exploração e datasets, 02 modelos (inicial, otimizado, sem zeros), 03 redução de dimensionalidade, 04 avaliação final, 05 dataset 6 (diagnóstico), 06 extensões finais, 07 métricas por dobra do histórico
+src/          particao.py (recria/confere a partição e as dobras), modelagem.py (classe FusaoSituacao do pipeline final), cv_utils.py (validação cruzada por dobra e registro em experimentos.csv), figuras_pitch.py (figuras do pitch)
 models/       modelos treinados (*.joblib, fora do git)
-resultados/   experimentos.csv, previsoes_teste.csv, tabelas/, figuras/, dataset5_outra_ia/ (script e métricas da solução independente)
+resultados/   experimentos.csv, previsoes_teste.csv, tabelas/, figuras/, dataset5_replicacao_independente/ (script e métricas da solução independente)
 docs/         documentacao_completa.docx, artigo.pdf, pitch.pdf, relatorio_detalhado_modelos.pdf, documentacao_decisoes.docx
 requirements.txt
 ```
@@ -185,8 +189,8 @@ requirements.txt
 
 * O desempenho é limitado pela **informação**, não pelo modelo: o perfil (renda, escolaridade, bens, escola, UF) explica cerca de 35% da variação da nota (R² de 0,354 no teste). Associações entre perfil e nota **não indicam causa** nem a capacidade individual dos participantes.
 * A divisão principal avalia **novos participantes da mesma edição**; não mostra generalização para escolas ou municípios inéditos. UF e escola são da prova e do cadastro, não da residência.
-* Os hiperparâmetros foram buscados no `dataset_1_fundido` e reaproveitados na representação final (a busca de novo custaria mais de 1 hora).
-* Os arquivos `busca_*.csv` dos notebooks otimizado e sem zeros têm os mesmos nomes; rodar um depois do outro sobrescreve os resultados do anterior.
+* Os hiperparâmetros foram buscados no `dataset_1_fundido` e reaproveitados na representação final. Uma busca nova nas 74 colunas (notebook 06) deu o mesmo erro (105,859 contra 105,864), então a limitação não pesa.
+* No notebook sem zeros, as buscas gravam `busca_sem_zeros_<modelo>.csv`, para não colidir com os `busca_<modelo>.csv` do notebook otimizado.
 
 ## 📚 Referências
 
